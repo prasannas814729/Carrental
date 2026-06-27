@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RentX — Drive Your Freedom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #b8861a;
+  --gold2: #d4a030;
+  --gold-dim: rgba(184,134,26,.15);
+  --bg: #f0f2f7;
+  --bg2: #e4e8f0;
+  --bg3: #d8dce8;
+  --card: #ffffff;
+  --border: #cbd0dc;
+  --text1: #1a1d24;
+  --text2: #4a5168;
+  --text3: #7a8099;
+  --blue: #1a5fa8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; color: var(--text1); background: var(--bg); }
+
+/* ── NAV ── */
+nav {
+  background: rgba(240,242,247,.97);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  height: 62px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px;
+  position: sticky; top: 0; z-index: 100;
+}
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px; color: var(--text1); text-decoration: none; letter-spacing: 2px;
+}
+.logo span { color: var(--gold); }
+.nav-right { display: flex; align-items: center; gap: 10px; }
+.nav-links { display: flex; align-items: center; gap: 4px; }
+.nav-links a {
+  color: var(--text2); text-decoration: none; font-size: 16px;
+  padding: 7px 14px; border-radius: 6px; transition: all .15s;
+}
+.nav-links a:hover { background: rgba(26,29,36,.06); color: var(--text1); }
+.nav-login-btn {
+  background: var(--gold); color: #ffffff !important;
+  padding: 8px 22px !important; border-radius: 6px;
+  font-weight: 700 !important; font-size: 16px;
+  text-decoration: none; transition: background .15s;
+}
+.nav-login-btn:hover { background: var(--gold2) !important; }
+
+/* HAMBURGER MENU BTN */
+.menu-btn {
+  display: flex; flex-direction: column; gap: 5px;
+  background: none; border: 1.5px solid var(--border);
+  padding: 9px 11px; border-radius: 7px; cursor: pointer;
+}
+.menu-btn:hover { background: rgba(26,29,36,.04); border-color: rgba(26,29,36,.15); }
+.menu-btn span { width: 20px; height: 2px; background: var(--text2); display: block; border-radius: 2px; }
+
+/* SIDE PANEL */
+.panel-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.3); z-index: 300; }
+.panel-overlay.open { display: block; }
+.side-panel {
+  position: fixed; top: 0; right: -290px;
+  width: 265px; height: 100vh; background: var(--bg2);
+  z-index: 301; box-shadow: -4px 0 30px rgba(0,0,0,.09);
+  display: flex; flex-direction: column;
+  transition: right .25s ease;
+  border-left: 1px solid var(--border);
+}
+.side-panel.open { right: 0; }
+.sp-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 18px; border-bottom: 1px solid var(--border);
+}
+.sp-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--text1); letter-spacing: 1px; }
+.sp-logo span { color: var(--gold); }
+.sp-close {
+  width: 30px; height: 30px; border-radius: 6px;
+  background: rgba(26,29,36,.06); border: 1px solid var(--border);
+  font-size: 15px; cursor: pointer; color: var(--text2);
+}
+.sp-close:hover { background: rgba(26,29,36,.12); color: var(--text1); }
+.sp-body { flex: 1; padding: 20px 16px; display: flex; flex-direction: column; gap: 10px; }
+.sp-label { font-size: 11px; font-weight: 600; color: var(--text2); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 2px; }
+.sp-btn {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 15px; border-radius: 10px;
+  text-decoration: none; border: 1px solid var(--border);
+  background: var(--card); transition: all .15s;
+}
+.sp-btn:hover { border-color: var(--gold); background: rgba(184,134,26,.07); }
+.sp-icon {
+  width: 38px; height: 38px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.ic-blue  { background: rgba(26,95,168,.12); }
+.ic-green { background: rgba(26,122,60,.12); }
+.ic-gray  { background: rgba(26,29,36,.07); }
+.sp-info { flex: 1; }
+.sp-title { font-size: 14px; font-weight: 600; color: var(--text1); }
+.sp-sub   { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.sp-arr   { font-size: 16px; color: var(--text2); }
+.sp-sep { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+.sp-admin {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 10px; border-radius: 8px;
+  background: rgba(184,134,26,.08); border: 1px solid rgba(184,134,26,.25);
+  text-decoration: none; font-size: 12px; font-weight: 700; color: var(--gold);
+}
+.sp-admin:hover { background: rgba(184,134,26,.15); }
+.sp-foot { padding: 14px 18px; border-top: 1px solid var(--border); text-align: center; font-size: 11px; color: var(--text2); }
+
+/* ── HERO ── */
+.hero {
+  background: 
+    linear-gradient(135deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.45) 100%),
+    url('https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=1400&q=90') center/cover no-repeat fixed;
+  padding: 120px 40px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  min-height: 550px;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 70% at 50% 50%, rgba(184,134,26,.08), transparent);
+  pointer-events: none;
+}
+.hero-text { max-width: 700px; text-align: center; position: relative; z-index: 2; }
+.hero-tag {
+  display: inline-block;
+  background: rgba(184,134,26,.25); color: #ffffff;
+  font-size: 13px; font-weight: 700; letter-spacing: 1.5px;
+  padding: 6px 18px; border-radius: 25px; margin-bottom: 20px;
+  border: 1.5px solid rgba(255,255,255,.3);
+  text-shadow: 0 2px 4px rgba(0,0,0,.2);
+}
+.hero-text h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 90px; line-height: .95;
+  color: #ffffff; margin-bottom: 18px; letter-spacing: 2px;
+  text-shadow: 0 4px 12px rgba(0,0,0,.4), 0 2px 6px rgba(0,0,0,.3);
+  font-weight: 900;
+}
+.hero-text h1 span { color: var(--gold2); text-shadow: 0 4px 12px rgba(184,160,32,.5); }
+.hero-text p { font-size: 20px; color: #ffffff; line-height: 1.8; margin-bottom: 30px; max-width: 550px; text-shadow: 0 3px 8px rgba(0,0,0,.3); margin-left: auto; margin-right: auto; }
+.hero-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+.btn-primary {
+  background: var(--gold2); color: #ffffff;
+  padding: 15px 35px; border-radius: 7px;
+  font-size: 17px; font-weight: 700;
+  text-decoration: none; border: none; cursor: pointer; transition: all .2s;
+  box-shadow: 0 4px 12px rgba(184,160,32,.3);
+}
+.btn-primary:hover { background: #e8b923; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(184,160,32,.4); }
+.btn-secondary {
+  background: rgba(255,255,255,.15); color: #ffffff;
+  padding: 15px 35px; border-radius: 7px;
+  font-size: 17px; font-weight: 600;
+  text-decoration: none; border: 1.5px solid rgba(255,255,255,.3); transition: all .2s;
+  backdrop-filter: blur(5px);
+}
+.btn-secondary:hover { border-color: rgba(255,255,255,.6); background: rgba(255,255,255,.25); transform: translateY(-2px); }
+.hero-img { display: none; }
+.hero-img img {
+  width: 480px; max-width: 100%; border-radius: 14px;
+  object-fit: cover; height: 320px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.09);
+}
+
+/* STATS */
+.stats {
+  display: flex; justify-content: center; gap: 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+}
+.stat {
+  flex: 1; max-width: 220px; text-align: center;
+  padding: 22px 12px; border-right: 1px solid var(--border);
+}
+.stat:last-child { border-right: none; }
+.stat-n { font-family: 'Bebas Neue', sans-serif; font-size: 38px; color: var(--gold); letter-spacing: 1px; }
+.stat-l { font-size: 14px; color: var(--text2); margin-top: 3px; }
+
+/* SECTION BASE */
+section { padding: 60px 40px; }
+.sec-tag {
+  display: inline-block; background: rgba(184,134,26,.1); color: var(--gold);
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  padding: 4px 14px; border-radius: 20px; margin-bottom: 12px;
+  text-transform: uppercase; border: 1px solid rgba(184,134,26,.2);
+}
+.sec-title { font-family: 'Bebas Neue', sans-serif; font-size: 42px; color: var(--text1); margin-bottom: 10px; letter-spacing: 1px; }
+.sec-desc { font-size: 16px; color: var(--text2); line-height: 1.75; margin-bottom: 32px; max-width: 500px; }
+
+/* HOW IT WORKS */
+.how-section { background: var(--bg); }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.step {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px 20px; text-align: center;
+  transition: border-color .15s;
+}
+.step:hover { border-color: rgba(184,134,26,.3); }
+.step-icon { font-size: 30px; margin-bottom: 14px; }
+.step-num { font-size: 11px; font-weight: 700; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+.step-name { font-size: 17px; font-weight: 600; color: var(--text1); margin-bottom: 8px; }
+.step-info { font-size: 15px; color: var(--text2); line-height: 1.65; }
+
+/* WHY */
+.why-section { background: var(--bg2); }
+.why-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.why-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 22px 20px;
+  display: flex; gap: 16px; transition: border-color .15s;
+}
+.why-card:hover { border-color: rgba(184,134,26,.25); }
+.why-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: rgba(184,134,26,.1); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0; border: 1px solid rgba(184,134,26,.15);
+}
+.why-title { font-size: 16px; font-weight: 700; color: var(--text1); margin-bottom: 5px; }
+.why-desc { font-size: 15px; color: var(--text2); line-height: 1.65; }
+
+/* PORTALS */
+.portals-section { background: var(--bg); }
+.portals-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 720px; }
+.portal-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 28px 24px;
+  text-decoration: none; color: inherit; display: block;
+  transition: all .2s;
+}
+.portal-card:hover { border-color: var(--gold); background: rgba(184,134,26,.05); transform: translateY(-2px); }
+.portal-icon { font-size: 30px; margin-bottom: 12px; }
+.portal-title { font-size: 21px; font-weight: 700; color: var(--text1); margin-bottom: 8px; }
+.portal-desc { font-size: 15px; color: var(--text2); line-height: 1.65; margin-bottom: 14px; }
+.portal-link { font-size: 15px; font-weight: 700; color: var(--gold); }
+
+/* CONTACT */
+.contact-section { background: var(--bg); }
+.contact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.contact-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 26px 22px; text-align: center;
+  transition: border-color .15s;
+}
+.contact-card:hover { border-color: rgba(184,134,26,.3); }
+.contact-icon { font-size: 32px; margin-bottom: 14px; }
+.contact-title { font-size: 17px; font-weight: 700; color: var(--text1); margin-bottom: 10px; }
+.contact-info { font-size: 16px; font-weight: 600; color: var(--text1); margin-bottom: 4px; }
+.contact-info-sub { font-size: 14px; color: var(--text2); line-height: 1.6; }
+
+/* SOCIAL MEDIA */
+.social-links { display: flex; justify-content: center; gap: 14px; margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--border); }
+.social-link {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: rgba(184,134,26,.1); border: 1px solid rgba(184,134,26,.2);
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none; font-size: 20px; color: var(--gold);
+  transition: all .15s;
+}
+.social-link:hover { background: var(--gold); color: #ffffff; border-color: var(--gold); }
+
+/* BOOK MODAL */
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.3); z-index: 200; align-items: center; justify-content: center; }
+.modal-bg:target { display: flex; }
+.modal-box {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 36px 30px;
+  width: 90%; max-width: 380px; text-align: center; position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,.09);
+}
+.modal-close { position: absolute; top: 14px; right: 18px; font-size: 18px; text-decoration: none; color: var(--text2); }
+.modal-close:hover { color: var(--text1); }
+.modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 30px; color: var(--text1); margin-bottom: 8px; margin-top: 10px; letter-spacing: 1px; }
+.modal-sub { font-size: 15px; color: var(--text2); margin-bottom: 22px; line-height: 1.65; }
+.modal-btns { display: flex; flex-direction: column; gap: 10px; }
+.modal-link {
+  display: block; padding: 12px;
+  border-radius: 8px; font-size: 16px; font-weight: 700; text-decoration: none;
+  transition: opacity .15s;
+}
+.modal-link:hover { opacity: .85; }
+.ml-gold { background: var(--gold); color: #ffffff; }
+.ml-outline { background: rgba(26,29,36,.04); color: var(--text1); border: 1px solid var(--border); }
+.ml-green { background: rgba(26,122,60,.12); color: #1a7a3c; border: 1px solid rgba(26,122,60,.25); }
+
+/* FOOTER */
+footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 48px 40px 24px; }
+.footer-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 40px; margin-bottom: 36px; }
+.footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--text1); letter-spacing: 2px; margin-bottom: 12px; display: block; }
+.footer-logo span { color: var(--gold); }
+.footer-about { font-size: 15px; color: var(--text2); line-height: 1.75; }
+.footer-col h4 { font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text2); margin-bottom: 14px; }
+.footer-col a { display: block; font-size: 15px; color: var(--text2); text-decoration: none; padding: 4px 0; transition: color .15s; }
+.footer-col a:hover { color: var(--gold); }
+.footer-bottom { border-top: 1px solid var(--border); padding-top: 20px; font-size: 14px; color: var(--text2); text-align: center; }
+
+/* RESPONSIVE */
+@media(max-width:900px) {
+  .cars-grid { grid-template-columns: 1fr 1fr; }
+  .steps { grid-template-columns: 1fr 1fr; }
+  .footer-top { grid-template-columns: 1fr; gap: 28px; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .hero { padding: 80px 24px; min-height: 450px; }
+  .hero-text h1 { font-size: 70px; }
+  .hero-text p { font-size: 18px; }
+  .hero-btns { justify-content: center; }
+  section { padding: 44px 24px; }
+  nav { padding: 0 20px; }
+  .nav-links a:not(.nav-login-btn) { display: none; }
+}
+@media(max-width:600px) {
+  .cars-grid { grid-template-columns: 1fr; }
+  .why-grid { grid-template-columns: 1fr; }
+  .portals-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .stats { flex-wrap: wrap; }
+  .stat { border-right: none; border-bottom: 1px solid var(--border); }
+  .hero { padding: 60px 20px; min-height: 380px; }
+  .hero-text h1 { font-size: 48px; }
+  .hero-text p { font-size: 16px; }
+  .btn-primary, .btn-secondary { padding: 12px 28px; font-size: 15px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="home.html" class="logo">RENT<span>X</span></a>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#cars">Browse Cars</a>
+      <a href="#how">How It Works</a>
+      <a href="#why">Why Us</a>
+      <a href="index.php" class="nav-login-btn">Login →</a>
+    </div>
+   
+  </div>
+</nav>
+
+<!-- OVERLAY -->
+
+
+<!-- SIDE PANEL -->
+
+
+<script>
+function openPanel() {
+  document.getElementById('sidePanel').classList.add('open');
+  document.getElementById('panelOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closePanel() {
+  document.getElementById('sidePanel').classList.remove('open');
+  document.getElementById('panelOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closePanel(); });
+</script>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-text">
+    <div class="hero-tag">🚗 Verified Car Rentals</div>
+    <h1>Rent Any Car<br><span>Fast &amp; Safely</span></h1>
+    <p>Browse real cars listed by verified owners. Every booking is secure with our admin-managed escrow payment system.</p>
+    <div class="hero-btns">
+      <a href="#book-modal" class="btn-primary">Book a Car</a>
+      <a href="#cars" class="btn-secondary">Browse Cars</a>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-n">500+</div><div class="stat-l">Cars Listed</div></div>
+  <div class="stat"><div class="stat-n">2,000+</div><div class="stat-l">Happy Users</div></div>
+  <div class="stat"><div class="stat-n">100%</div><div class="stat-l">Secure Payments</div></div>
+  <div class="stat"><div class="stat-n">0</div><div class="stat-l">Fraud Cases</div></div>
+</div>
+
+<!-- BROWSE CARS -->
+<section class="cars-section" id="cars" style="text-align:center;">
+  <div class="sec-tag">Our Fleet</div>
+  <div class="sec-title">Available Cars</div>
+  <p style="color:var(--text2);font-size:15px;line-height:1.75;max-width:480px;margin:0 auto 2rem;">
+    Hundreds of verified cars from real owners across India. Login to browse and book instantly.
+  </p>
+  <a href="/rentx/cars.php" class="btn-primary" style="display:inline-block;">Browse Cars →</a>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="sec-tag">Process</div>
+  <div class="sec-title">How RentX Works</div>
+  <div class="sec-desc">From signup to driving — simple, safe, 4 easy steps.</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-icon">📝</div>
+      <div class="step-num">Step 01</div>
+      <div class="step-name">Register Free</div>
+      <div class="step-info">Sign up with email or Google. No ID required at registration.</div>
+    </div>
+    <div class="step">
+      <div class="step-icon">🔍</div>
+      <div class="step-num">Step 02</div>
+      <div class="step-name">Browse Cars</div>
+      <div class="step-info">All cars are listed by real owners and verified by our admin team.</div>
+    </div>
+    <div class="step">
+      <div class="step-icon">📄</div>
+      <div class="step-num">Step 03</div>
+      <div class="step-name">Upload &amp; Book</div>
+      <div class="step-info">Upload your driving licence and ID proof at the time of booking.</div>
+    </div>
+    <div class="step">
+      <div class="step-icon">🚗</div>
+      <div class="step-num">Step 04</div>
+      <div class="step-name">Drive &amp; Enjoy</div>
+      <div class="step-info">Get your car delivered. Payment released to owner after confirmed delivery.</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY RENTX -->
+<section class="why-section" id="why">
+  <div class="sec-tag">Why Us</div>
+  <div class="sec-title">Safe at Every Step</div>
+  <div class="sec-desc">Built to solve the trust problem in car rentals.</div>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-icon">🔒</div>
+      <div>
+        <div class="why-title">Escrow Payments</div>
+        <div class="why-desc">You pay → Admin holds → Owner gets paid only after car delivery is confirmed.</div>
+      </div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">✅</div>
+      <div>
+        <div class="why-title">Verified Owners</div>
+        <div class="why-desc">All car owners are verified by admin before their cars are listed.</div>
+      </div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">📄</div>
+      <div>
+        <div class="why-title">Document Check at Booking</div>
+        <div class="why-desc">Driving licence and ID proof verified at booking time — not at registration.</div>
+      </div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🛡️</div>
+      <div>
+        <div class="why-title">Fraud Detection</div>
+        <div class="why-desc">Duplicate plates and suspicious bookings are auto-flagged by the system.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="sec-tag">Get In Touch</div>
+  <div class="sec-title">Contact Us</div>
+  <div class="sec-desc">Have questions? We're here to help. Reach out to our support team.</div>
+  <div class="contact-grid">
+    <div class="contact-card">
+      <div class="contact-icon">📞</div>
+      <div class="contact-title">Phone</div>
+      <div class="contact-info">+91 8073755297</div>
+      <div class="contact-info-sub">Mon - Fri, 9 AM - 6 PM IST</div>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">📧</div>
+      <div class="contact-title">Email</div>
+      <div class="contact-info">prasannas814729@gmail.com</div>
+      <div class="contact-info-sub">We'll respond within 24 hours</div>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">📍</div>
+      <div class="contact-title">Address</div>
+      <div class="contact-info">RentX Headquarters</div>
+      <div class="contact-info-sub">dharwad,karnataka, India</div>
+    </div>
+  </div>
+  <div class="social-links">
+    <a href="https://www.facebook.com/rentx" target="_blank" rel="noopener noreferrer" class="social-link" title="Follow us on Facebook">f</a>
+    <a href="https://www.instagram.com/rentx" target="_blank" rel="noopener noreferrer" class="social-link" title="Follow us on Instagram">📷</a>
+    <a href="https://www.linkedin.com/company/rentx" target="_blank" rel="noopener noreferrer" class="social-link" title="Connect on LinkedIn">in</a>
+    <a href="https://twitter.com/rentx" target="_blank" rel="noopener noreferrer" class="social-link" title="Follow us on Twitter">𝕏</a>
+    <a href="https://www.youtube.com/rentx" target="_blank" rel="noopener noreferrer" class="social-link" title="Subscribe on YouTube">▶</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <span class="footer-logo">RENT<span>X</span></span>
+      <p class="footer-about">A trusted car rental platform connecting verified users with real car owners under secure admin supervision.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <a href="#cars">Browse Cars</a>
+      <a href="#how">How It Works</a>
+      <a href="#why">Why RentX</a>
+    </div>
+    <div class="footer-col">
+      <h4>Portals</h4>
+      <a href="index.php?role=user">User Login</a>
+      <a href="index.php?role=user">User Register</a>
+      <a href="index.php?role=owner">Owner Login</a>
+      <a href="index.php?role=admin">Admin Login</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2025 RentX Car Rentals. All rights reserved.</div>
+</footer>
+
+<!-- BOOK MODAL -->
+<div class="modal-bg" id="book-modal">
+  <div class="modal-box">
+    <a href="#" class="modal-close">✕</a>
+    <div style="font-size:36px;">🚗</div>
+    <div class="modal-title">Ready to Book?</div>
+    <p class="modal-sub">Login or create a free account to book this car.</p>
+    <div class="modal-btns">
+      <a href="index.php?role=user" class="modal-link ml-gold">🔑 Login to My Account</a>
+      <a href="index.php?role=user" class="modal-link ml-outline">📝 Create Free Account</a>
+      <a href="index.php?role=owner" class="modal-link ml-green">🚘 Owner Login</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
